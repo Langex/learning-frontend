@@ -1,3 +1,0 @@
-public interface EmployeeRepository extends CrudRepository<Employe, Long> {
-
-}
