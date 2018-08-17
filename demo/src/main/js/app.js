@@ -54,6 +54,17 @@ class App extends React.Component {
         });
     }
 
+    onNavigate(navUri) {
+        client({method: 'GET', path: navUri}).done(employeeCollection => {
+            this.setState({
+                employees: employeeCollection.entity._embedded.employees,
+                attributes: this.state.attributes,
+                pageSize: this.state.pageSize,
+                links: employeeCollection.entity._links
+            });
+        });
+    }
+
     componentDidMount() {
         this.loadFromServer(this.state.pageSize);
     }
