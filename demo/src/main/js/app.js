@@ -54,6 +54,13 @@ class App extends React.Component {
         });
     }
 
+    onDelete(employee) {
+        client({method: 'DELETE', path: employee._links.self.href
+        }).done(response => {
+            this.loadFromServer(this.state.pageSize);
+        });
+    }
+
     onNavigate(navUri) {
         client({method: 'GET', path: navUri}).done(employeeCollection => {
             this.setState({
@@ -63,6 +70,12 @@ class App extends React.Component {
                 links: employeeCollection.entity._links
             });
         });
+    }
+
+    updatePageSize(pageSize) {
+        if (pageSize !== this.state.pageSize) {
+            this.loadFromServer(pageSize)
+        }
     }
 
     componentDidMount() {
@@ -128,9 +141,29 @@ class CreateDialog extends React.Component {
 }
 
 
-class EmployeeList extends React.Component{
+class EmployeeList extends React.Component {
 
-    handleNavFirst(e){
+    constructor(props) {
+        super(props);
+        this.handleNavFirst = this.handleNavFirst.bind(this);
+        this.handleNavPrev = this.handleNavPrev.bind(this);
+        this.handleNavNext = this.handleNavNext.bind(this);
+        this.handleNavLast = this.handleNavLast.bind(this);
+        this.handleInput = this.handleInput.bind(this);
+    }
+
+    handleInput(e) {
+        e.preventDefault();
+        var pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
+        if (/^[0-9]+$/.test(pageSize)) {
+            this.props.updatePageSize(pageSize);
+        } else {
+            ReactDOM.findDOMNode(this.refs.pageSize).value =
+                pageSize.substring(0, pageSize.length - 1);
+        }
+    }
+
+    handleNavFirst(e) {
         e.preventDefault();
         this.props.onNavigate(this.props.links.first.href);
     }
@@ -189,6 +222,7 @@ class EmployeeList extends React.Component{
             </div>
         )
     }
+}
 
     class Employee extends React.Component {
 
