@@ -19,6 +19,7 @@ class App extends React.Component {
 		this.onNavigate = this.onNavigate.bind(this);
 	}
 
+
 	loadFromServer(pageSize) {
 		follow(client, root, [
 			{rel: 'employees', params: {size: pageSize}}]
@@ -62,12 +63,12 @@ class App extends React.Component {
 	}
 
 
-
 	onDelete(employee) {
 		client({method: 'DELETE', path: employee._links.self.href}).done(response => {
 			this.loadFromServer(this.state.pageSize);
 		});
 	}
+
 
 	onNavigate(navUri) {
 		client({method: 'GET', path: navUri}).done(employeeCollection => {
@@ -80,15 +81,18 @@ class App extends React.Component {
 		});
 	}
 
+
 	updatePageSize(pageSize) {
 		if (pageSize !== this.state.pageSize) {
 			this.loadFromServer(pageSize);
 		}
 	}
 
+
 	componentDidMount() {
 		this.loadFromServer(this.state.pageSize);
 	}
+
 
 	render() {
 		return (
@@ -105,6 +109,8 @@ class App extends React.Component {
 	}
 }
 
+
+
 class CreateDialog extends React.Component {
 
 	constructor(props) {
@@ -120,10 +126,12 @@ class CreateDialog extends React.Component {
 		});
 		this.props.onCreate(newEmployee);
 
+		// clear out the dialog's inputs
 		this.props.attributes.forEach(attribute => {
 			ReactDOM.findDOMNode(this.refs[attribute]).value = '';
 		});
 
+		// Navigate away from the dialog to hide it.
 		window.location = "#";
 	}
 
@@ -156,6 +164,7 @@ class CreateDialog extends React.Component {
 
 }
 
+
 class EmployeeList extends React.Component {
 
 	constructor(props) {
@@ -167,6 +176,7 @@ class EmployeeList extends React.Component {
 		this.handleInput = this.handleInput.bind(this);
 	}
 
+	// tag::handle-page-size-updates[]
 	handleInput(e) {
 		e.preventDefault();
 		var pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
@@ -177,7 +187,9 @@ class EmployeeList extends React.Component {
 				pageSize.substring(0, pageSize.length - 1);
 		}
 	}
+	// end::handle-page-size-updates[]
 
+	// tag::handle-nav[]
 	handleNavFirst(e){
 		e.preventDefault();
 		this.props.onNavigate(this.props.links.first.href);
@@ -197,6 +209,7 @@ class EmployeeList extends React.Component {
 		e.preventDefault();
 		this.props.onNavigate(this.props.links.last.href);
 	}
+	
 
 	render() {
 		var employees = this.props.employees.map(employee =>
@@ -237,7 +250,7 @@ class EmployeeList extends React.Component {
 			</div>
 		)
 	}
-
+	
 }
 
 class Employee extends React.Component {
