@@ -1,23 +1,28 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistance.Version;
+import javax.persistence.Version;
 
-import lombok.Data;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
 public class Employee {
+
     private @Id
     @GeneratedValue
     Long id;
     private String firstName;
     private String lastName;
     private String description;
-    private @Version @JsonIgnore Long version;
+
+    private @Version
+    @JsonIgnore
+    Long version;
 
     private Employee() {
     }
@@ -28,4 +33,3 @@ public class Employee {
         this.description = description;
     }
 }
- 
