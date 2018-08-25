@@ -73,6 +73,24 @@ class App extends React.Component {
         });
     }
 
+    onUpdate(employee, updatedEmployee) {
+        client({
+            method: 'PUT',
+            path: employee.entity._links.self.href,
+            entity: updatedEmployee,
+            headers: {
+                'Content-Type': 'application/json',
+                'If-Match': employee.headers.Etag
+            }
+        }).done(response => {
+            this.loadFromServer(this.state.pageSize);
+        }, response => {
+            if (response.status.code === 412) {
+                alert('DENIED: Unable to update ' +
+                    employee.entity._links.self.href + '. Your copy is stale.');
+            }
+        });
+    }
 
     onDelete(employee) {
         client({method: 'DELETE', path: employee._links.self.href}).done(response => {
@@ -327,9 +345,14 @@ class Employee extends React.Component {
     render() {
         return (
             <tr>
-                <td>{this.props.employee.firstName}</td>
-                <td>{this.props.employee.lastName}</td>
-                <td>{this.props.employee.description}</td>
+                <td>{this.props.employee.entity.firstName}</td>
+                <td>{this.props.employee.entity.lastName}</td>
+                <td>{this.props.employee.entity.description}</td>
+                <td>
+                    <UpdateDialog employee={this.props.employee}
+                                  attributes={this.props.attributes}
+                                  onUpdate={this.props.onUpdate}/>
+                </td>
                 <td>
                     <button onClick={this.handleDelete}>Delete</button>
                 </td>
@@ -337,7 +360,6 @@ class Employee extends React.Component {
         )
     }
 }
-
 ReactDOM.render(
     <App/>,
     document.getElementById('react')
