@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistance.Version;
 
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
