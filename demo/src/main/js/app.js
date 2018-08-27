@@ -2,6 +2,7 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
+const when = require('when');
 const client = require('./client');
 
 const follow = require('./follow');
@@ -214,7 +215,7 @@ class UpdateDialog extends React.Component {
             <p key={this.props.employee.entity[attribute]}>
                 <input type="text" placeholder={attribute}
                        defaultValue={this.props.employee.entity[attribute]}
-                       ref={attribute} className="field" />
+                       ref={attribute} className="field"/>
             </p>
         );
 
@@ -360,6 +361,7 @@ class Employee extends React.Component {
         )
     }
 }
+
 ReactDOM.render(
     <App/>,
     document.getElementById('react')
